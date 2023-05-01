@@ -1,3 +1,3 @@
 # Pokemons app
 
-App for viewing Pokemon base on React, Next.js, Apollo & GraphQL.
+App for viewing Pokemon based on React, Next.js, Apollo & GraphQL.
