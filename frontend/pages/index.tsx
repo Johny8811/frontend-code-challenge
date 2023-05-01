@@ -1,11 +1,17 @@
+import { useState } from "react";
 import Head from 'next/head'
 // import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
+import { TabNavigation } from '@/components/TabNavigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export type ActiveTabState = 'all' | 'favorites'
+
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<ActiveTabState>('all')
+
   return (
     <>
       <Head>
@@ -14,6 +20,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
+
+        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab}/>
+
         <div className={styles.description}>
           <p>
             Get started by editing&nbsp;
