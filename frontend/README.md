@@ -1,3 +1,3 @@
-# frontend
+# Pokemons app
 
-This folder is the place for your code.
+App for viewing Pokemon base on React, Next.js, Apollo & GraphQL.
