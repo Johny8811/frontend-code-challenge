@@ -23,13 +23,6 @@ export default function Home() {
 
         <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab}/>
 
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
-        </div>
-
         <div className={styles.grid}>
           <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
