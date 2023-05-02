@@ -1,15 +1,24 @@
 import { useState } from "react";
 import Head from 'next/head'
-// import Image from 'next/image'
+import Image from 'next/image'
 import { Inter } from 'next/font/google'
+import { gql } from '@apollo/client'
+
 import styles from '@/styles/Home.module.css'
 import { TabNavigation } from '@/components/TabNavigation'
+import { client } from '@/apollo/apollo-client'
+
+import { ActiveTabState } from '@/types/common'
+import { PokemonsList } from '@/types/pokemons'
 
 const inter = Inter({ subsets: ['latin'] })
+const IMAGE_SIZE = 240
 
-export type ActiveTabState = 'all' | 'favorites'
+type Props = {
+  pokemons: PokemonsList,
+}
 
-export default function Home() {
+export default function Home({ pokemons }: Props) {
   const [activeTab, setActiveTab] = useState<ActiveTabState>('all')
 
   return (
@@ -20,25 +29,60 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-
-        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab}/>
+        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
+          {pokemons.map(p => (
+            <a
+              key={p.id}
+              href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+              className={styles.card}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src={p.image}
+                alt={p.name}
+                width={IMAGE_SIZE}
+                height={IMAGE_SIZE}
+                priority
+                className={styles.cardImage}
+              />
+              <h3>
+                {p.name} <span>-&gt;</span>
+              </h3>
+              <p>
+                {p.types.toString()}
+              </p>
+            </a>
+          ))}
         </div>
       </main>
     </>
   )
+}
+
+export async function getStaticProps(): Promise<{ props: Props }> {
+  // TODO: type
+  const { data } = await client.query({
+    query: gql`
+      query pokemons {
+        pokemons(query: { limit: 30 }) {
+          edges {
+            id
+            name
+            types
+            image
+            isFavorite
+          }
+        }
+      }
+    `
+  });
+
+  return {
+    props: {
+      pokemons: data.pokemons.edges,
+    }
+  }
 }
