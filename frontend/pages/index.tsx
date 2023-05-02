@@ -20,6 +20,31 @@ type Props = {
   pokemons: PokemonsList,
 }
 
+export async function getStaticProps(): Promise<{ props: Props }> {
+  // TODO: type
+  const { data } = await client.query({
+    query: gql`
+      query pokemons {
+        pokemons(query: { limit: 30 }) {
+          edges {
+            id
+            name
+            types
+            image
+            isFavorite
+          }
+        }
+      }
+    `
+  });
+
+  return {
+    props: {
+      pokemons: data.pokemons.edges,
+    }
+  }
+}
+
 export default function Home({ pokemons }: Props) {
   const [activeTab, setActiveTab] = useState<ActiveTabState>('all')
 
@@ -86,29 +111,4 @@ export default function Home({ pokemons }: Props) {
       </main>
     </>
   )
-}
-
-export async function getStaticProps(): Promise<{ props: Props }> {
-  // TODO: type
-  const { data } = await client.query({
-    query: gql`
-      query pokemons {
-        pokemons(query: { limit: 30 }) {
-          edges {
-            id
-            name
-            types
-            image
-            isFavorite
-          }
-        }
-      }
-    `
-  });
-
-  return {
-    props: {
-      pokemons: data.pokemons.edges,
-    }
-  }
 }
