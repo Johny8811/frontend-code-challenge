@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
-import { gql } from '@apollo/client'
 
 import styles from '@/styles/Home.module.css'
 import { TabNavigation } from '@/components/TabNavigation'
@@ -10,6 +9,8 @@ import { client } from '@/apollo/apollo-client'
 
 import { ActiveTabState } from '@/types/common'
 import { PokemonsList } from '@/types/pokemons'
+import { Query, QueryPokemonsArgs } from '@/types/graphql'
+import { POKEMONS } from '@/graphql/queries.graphql'
 
 const inter = Inter({ subsets: ['latin'] })
 const POKEMON_IMAGE_SIZE = 240
@@ -21,21 +22,8 @@ type Props = {
 }
 
 export async function getStaticProps(): Promise<{ props: Props }> {
-  // TODO: type
-  const { data } = await client.query({
-    query: gql`
-      query pokemons {
-        pokemons(query: { limit: 30 }) {
-          edges {
-            id
-            name
-            types
-            image
-            isFavorite
-          }
-        }
-      }
-    `
+  const { data } = await client.query<Query, QueryPokemonsArgs>({
+    query: POKEMONS
   });
 
   return {
