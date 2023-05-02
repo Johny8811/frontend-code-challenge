@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
@@ -12,7 +12,9 @@ import { ActiveTabState } from '@/types/common'
 import { PokemonsList } from '@/types/pokemons'
 
 const inter = Inter({ subsets: ['latin'] })
-const IMAGE_SIZE = 240
+const POKEMON_IMAGE_SIZE = 240
+const FAVOURITE_IMAGE_SIZE = 30
+const favouriteDev = false
 
 type Props = {
   pokemons: PokemonsList,
@@ -20,6 +22,11 @@ type Props = {
 
 export default function Home({ pokemons }: Props) {
   const [activeTab, setActiveTab] = useState<ActiveTabState>('all')
+
+  const handleAddToFavourite = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // TODO: add to feature
+  }
 
   return (
     <>
@@ -43,17 +50,36 @@ export default function Home({ pokemons }: Props) {
               <Image
                 src={p.image}
                 alt={p.name}
-                width={IMAGE_SIZE}
-                height={IMAGE_SIZE}
+                width={POKEMON_IMAGE_SIZE}
+                height={POKEMON_IMAGE_SIZE}
                 priority
                 className={styles.cardImage}
               />
               <h3>
-                {p.name} <span>-&gt;</span>
+                {p.name}
               </h3>
               <p>
                 {p.types.toString()}
               </p>
+              <button onClick={handleAddToFavourite}>
+                {favouriteDev ? (
+                  <Image
+                    src="/images/heart-filled.png"
+                    alt="favourite"
+                    width={FAVOURITE_IMAGE_SIZE}
+                    height={FAVOURITE_IMAGE_SIZE}
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src="/images/heart.png"
+                    alt="favourite"
+                    width={FAVOURITE_IMAGE_SIZE}
+                    height={FAVOURITE_IMAGE_SIZE}
+                    priority
+                  />
+                )}
+              </button>
             </a>
           ))}
         </div>
